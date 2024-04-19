@@ -1,0 +1,6 @@
+## Interface: 100206
+## Title: Easy transmog finder
+## Author: Thoni Araujo
+## Version: 0.1
+
+main.lua
