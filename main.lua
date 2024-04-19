@@ -1,8 +1,7 @@
 wowheadUrl = "https://www.wowhead.com/wow/retail"
 
--- Create a frame to handle the keybind
 -- Define your keybind and the function you want to execute
-local MY_KEYBIND = "SHIFT+UP"
+local MY_KEYBIND = "ALT+SHIFT+F"
 local function MyFunction()
     -- Your code here
     print("Shift + Up key pressed!")
@@ -13,8 +12,12 @@ end
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:SetScript("OnEvent", function(self, event, ...)
-    -- Register the keybind when the player logs in
-    SetOverrideBinding(frame, true, MY_KEYBIND, "MyBindingName")
-    -- Set up the function to be called when the keybind is pressed
-    hooksecurefunc("MyBindingName", MyFunction)
+    -- Set up the OnKeyDown script handler to capture key presses
+    self:SetScript("OnKeyDown", function(_, key)
+        -- Check if the pressed key matches the desired keybind
+        if key == MY_KEYBIND then
+            -- Call the function when the keybind is pressed
+            MyFunction()
+        end
+    end)
 end)
