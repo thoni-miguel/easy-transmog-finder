@@ -1,23 +1,29 @@
-wowheadUrl = "https://www.wowhead.com/wow/retail"
+local frame = CreateFrame("Frame")
 
--- Define your keybind and the function you want to execute
-local MY_KEYBIND = "ALT+SHIFT+F"
-local function MyFunction()
-    -- Your code here
-    print("Shift + Up key pressed!")
-    -- Example: You can replace the print statement with any function you want to run
+local function sendLinkToChat(linkGenerated)
+    local playerName = UnitName("Player")
+    SendChatMessage(linkGenerated, "WHISPER", nil, playerName)
+
+
 end
 
--- Register for the PLAYER_LOGIN event to ensure the player is logged in
-local frame = CreateFrame("Frame")
-frame:RegisterEvent("PLAYER_LOGIN")
-frame:SetScript("OnEvent", function(self, event, ...)
-    -- Set up the OnKeyDown script handler to capture key presses
-    self:SetScript("OnKeyDown", function(_, key)
-        -- Check if the pressed key matches the desired keybind
-        if key == MY_KEYBIND then
-            -- Call the function when the keybind is pressed
-            MyFunction()
+
+local function myFunction(itemID)
+    print("info: " .. itemID)
+    -- itemAppearanceID, itemModifiedAppearanceID = C_TransmogCollection.GetItemInfo(itemLink)
+    local linkGenerated = "https://www.wowhead.com/item=" .. itemID
+    sendLinkToChat(linkGenerated)
+end
+
+
+function OnTooltipSetItem(tooltip, ...)
+    local itemName, itemLink, item = tooltip:GetItem()
+    if itemName and itemLink then
+        if IsLeftShiftKeyDown() and IsAltKeyDown() then
+            myFunction(item)
         end
-    end)
-end)
+    end
+end
+
+TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSetItem)
+
